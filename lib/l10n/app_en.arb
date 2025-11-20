@@ -1,0 +1,19 @@
+{
+  "appName": "Tic Tac Toe",
+  "appCatchphrase": "Three in a row... or more !",
+  "startGameInstruction": "Choose your grid size and your difficulty and start a game to beat the AI!",
+  "startGameGridSizeLabel": "Grid size:",
+  "startGameStartButton": "Start",
+  "startGameDifficultyLabel": "Difficulty:",
+  "startGameDifficultyEasyLabel": "Easy",
+  "startGameDifficultyHardLabel": "Hard",
+  "boardHumanPlayerTurn": "Your turn !",
+  "boardAiPlayerTurn": "It's the AI's turn...",
+  "boardPlayAgainButtonLabel": "Play again",
+  "boardVictoryTitle": "Congrats !!",
+  "boardVictoryText": "You won!",
+  "boardDefeatTitle": "Oops!",
+  "boardDefeatText": "You lost...",
+  "boardDrawTitle": "Oops!",
+  "boardDrawText": "It's a draw..."
+}

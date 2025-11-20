@@ -1,0 +1,19 @@
+{
+  "appName": "Morpion",
+  "appCatchphrase": "Trois à la suite... ou plus !",
+  "startGameInstruction": "Choisissez votre taille de grille et votre difficulté puis lancez le jeu pour vous mesurer à l'IA !",
+  "startGameGridSizeLabel": "Taille de grille :",
+  "startGameStartButton": "Démarrer",
+  "startGameDifficultyLabel": "Difficulté :",
+  "startGameDifficultyEasyLabel": "Facile",
+  "startGameDifficultyHardLabel": "Difficile",
+  "boardHumanPlayerTurn": "À vous de jouer !",
+  "boardAiPlayerTurn": "C'est au tour de l'IA...",
+  "boardPlayAgainButtonLabel": "Rejouer",
+  "boardVictoryTitle": "Bravo !!",
+  "boardVictoryText": "Vous avez gagné !",
+  "boardDefeatTitle": "Oups !",
+  "boardDefeatText": "Vous avez perdu...",
+  "boardDrawTitle": "Oups !",
+  "boardDrawText": "C'est une égalité..."
+}
