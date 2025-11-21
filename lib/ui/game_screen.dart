@@ -203,24 +203,56 @@ class GridCell extends StatelessWidget {
       null => null,
     };
 
-    return InkWell(
-      onTap: cell.mark == Player.none ? onTap : null,
-      child: Container(
-        decoration: BoxDecoration(
-          color: color?.withAlpha(100),
-          borderRadius: BorderRadius.all(Radius.circular(ThemeSize.xs)),
-          border: Border.all(
-            // Ideally extract to theme
-            color: Theme.of(context).brightness == Brightness.light
-                ? Colors.black
-                : Colors.white,
-            width: 1.0,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final fontSize = constraints.maxWidth / 1.5;
+        final strokeWidth = constraints.maxWidth / 15;
+
+        return InkWell(
+          onTap: cell.mark == Player.none ? onTap : null,
+          child: Container(
+            decoration: BoxDecoration(
+              color: color?.withAlpha(100),
+              borderRadius: BorderRadius.all(Radius.circular(ThemeSize.xs)),
+              border: Border.all(
+                // Ideally extract to theme
+                color: Theme.of(context).brightness == Brightness.light
+                    ? Colors.black
+                    : Colors.white,
+                width: 1.0,
+              ),
+            ),
+            child: Center(
+              child: Stack(
+                children: [
+                  Text(
+                    cell.mark.symbol,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: fontSize,
+                      foreground: Paint()
+                        ..style = PaintingStyle.stroke
+                        ..strokeWidth = strokeWidth
+                        ..color =
+                            Theme.of(context).brightness == Brightness.light
+                            ? Colors.black
+                            : Colors.white,
+                    ),
+                  ),
+                  Text(
+                    cell.mark.symbol,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: cell.mark.symbolColor,
+                      fontSize: fontSize,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-        child: Center(
-          child: Text(cell.mark.symbol, style: TextStyle(fontSize: 40)),
-        ),
-      ),
+        );
+      },
     );
   }
 }
@@ -229,9 +261,15 @@ enum GridCellColor { green, red }
 
 extension on Player {
   String get symbol => switch (this) {
-    Player.none => '',
     Player.human => 'X',
     Player.ai => 'O',
+    Player.none => '',
+  };
+
+  Color get symbolColor => switch (this) {
+    Player.human => Colors.red,
+    Player.ai => Colors.blue,
+    Player.none => Colors.transparent,
   };
 }
 
