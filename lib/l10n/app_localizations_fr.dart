@@ -34,6 +34,24 @@ class AppLocalizationsFr extends AppLocalizations {
   String get startGameDifficultyHardLabel => 'Difficile';
 
   @override
+  String get statsLabel => 'Statistiques';
+
+  @override
+  String statWins(int n, int percentage) {
+    return 'Victoires : $n ($percentage%)';
+  }
+
+  @override
+  String statLoses(int n, int percentage) {
+    return 'Défaites : $n ($percentage%)';
+  }
+
+  @override
+  String statDraws(int n, int percentage) {
+    return 'Égalités : $n ($percentage%)';
+  }
+
+  @override
   String get boardHumanPlayerTurn => 'À vous de jouer !';
 
   @override

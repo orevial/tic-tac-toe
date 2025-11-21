@@ -146,6 +146,30 @@ abstract class AppLocalizations {
   /// **'Hard'**
   String get startGameDifficultyHardLabel;
 
+  /// No description provided for @statsLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Stats'**
+  String get statsLabel;
+
+  /// No description provided for @statWins.
+  ///
+  /// In en, this message translates to:
+  /// **'Wins : {n} ({percentage}%)'**
+  String statWins(int n, int percentage);
+
+  /// No description provided for @statLoses.
+  ///
+  /// In en, this message translates to:
+  /// **'Loses : {n} ({percentage}%)'**
+  String statLoses(int n, int percentage);
+
+  /// No description provided for @statDraws.
+  ///
+  /// In en, this message translates to:
+  /// **'Draws : {n} ({percentage}%)'**
+  String statDraws(int n, int percentage);
+
   /// No description provided for @boardHumanPlayerTurn.
   ///
   /// In en, this message translates to:

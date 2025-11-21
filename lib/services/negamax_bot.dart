@@ -5,7 +5,6 @@ import 'package:tictactoe/domain/cell.dart';
 import 'package:tictactoe/domain/player.dart';
 import 'package:tictactoe/services/ai_bot.dart';
 
-
 const _minScore = -9999;
 const _maxScore = -_minScore;
 
@@ -167,7 +166,6 @@ class NegamaxBot implements AiBot {
 
           // Prune if necessary
           if (parent.alpha >= parent.beta) {
-            // print('Pruning');
             stack.removeLast();
           }
         } else {
@@ -178,9 +176,6 @@ class NegamaxBot implements AiBot {
 
       // If all moves evaluated → collapse
       if (frame.moveIndex >= frame.moves.length) {
-        // if (frame.scores.isEmpty) {
-        //   print('Empty scores...');
-        // }
         final best = frame.scores.isNotEmpty
             ? frame.scores.reduce((a, b) => a > b ? a : b)
             : 0;
@@ -194,7 +189,6 @@ class NegamaxBot implements AiBot {
 
           // Prune
           if (parent.alpha >= parent.beta) {
-            // print('Pruning');
             stack.removeLast();
           }
         } else {

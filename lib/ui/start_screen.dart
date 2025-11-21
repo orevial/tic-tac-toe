@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
 import 'package:tictactoe/domain/bot_difficulty.dart';
 import 'package:tictactoe/domain/grid_size.dart';
+import 'package:tictactoe/domain/stat.dart';
+import 'package:tictactoe/ui/stats_provider.dart';
 import 'package:tictactoe/ui/theme/theme.dart';
 import 'package:tictactoe/ui/theme/theme_provider.dart';
 import 'package:tictactoe/ui/theme/theme_spacings.dart';
@@ -46,7 +48,7 @@ class _StartPageState extends ConsumerState<StartScreen> {
                     fontStyle: FontStyle.italic,
                   ),
                 ),
-                Space.l,
+                Space.m,
                 Padding(
                   padding: const .symmetric(horizontal: ThemeSize.m),
                   child: Text(
@@ -54,7 +56,7 @@ class _StartPageState extends ConsumerState<StartScreen> {
                     textAlign: .center,
                   ),
                 ),
-                Space.l,
+                Space.sm,
                 Card(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
@@ -63,7 +65,10 @@ class _StartPageState extends ConsumerState<StartScreen> {
                     ),
                     child: Column(
                       children: [
-                        Text(context.l10n.startGameGridSizeLabel),
+                        Text(
+                          context.l10n.startGameGridSizeLabel,
+                          style: context.textTheme.labelLarge,
+                        ),
                         Space.xs,
                         SegmentedButton<GridSize>(
                           segments: GridSize.values
@@ -82,7 +87,10 @@ class _StartPageState extends ConsumerState<StartScreen> {
                           },
                         ),
                         Space.sm,
-                        Text(context.l10n.startGameDifficultyLabel),
+                        Text(
+                          context.l10n.startGameDifficultyLabel,
+                          style: context.textTheme.labelLarge,
+                        ),
                         Space.xs,
                         SegmentedButton<BotDifficulty>(
                           segments: BotDifficulty.values
@@ -104,7 +112,7 @@ class _StartPageState extends ConsumerState<StartScreen> {
                     ),
                   ),
                 ),
-                Space.l,
+                Space.s,
                 FilledButton(
                   onPressed: () {
                     Navigator.push(
@@ -119,6 +127,9 @@ class _StartPageState extends ConsumerState<StartScreen> {
                   },
                   child: Text(context.l10n.startGameStartButton),
                 ),
+                Space.xs,
+                _StatsCard(gridSize: _gridSize, botDifficulty: _botDifficulty),
+                Space.sm,
               ],
             ),
           ),
@@ -165,6 +176,47 @@ class ThemeModeIcon extends ConsumerWidget {
     return Theme.of(context).brightness == Brightness.light
         ? ThemeMode.light
         : ThemeMode.dark;
+  }
+}
+
+class _StatsCard extends ConsumerWidget {
+  final GridSize gridSize;
+  final BotDifficulty botDifficulty;
+
+  const _StatsCard({required this.gridSize, required this.botDifficulty});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final asyncStats = ref.watch(statsProvider);
+    final stats = switch (asyncStats) {
+      AsyncValue(:final value?) => value,
+      _ => AllStats.empty(),
+    };
+    final currentStats = stats.getStat(botDifficulty, gridSize);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: ThemeSize.m,
+          vertical: ThemeSize.sm,
+        ),
+        child: Column(
+          children: [
+            Text(context.l10n.statsLabel, style: context.textTheme.labelLarge),
+            Space.xxs,
+            Text(
+              '🏆 ${context.l10n.statWins(currentStats.nWins, currentStats.winsPercentage)}',
+            ),
+            Text(
+              '👎 ${context.l10n.statLoses(currentStats.nLoses, currentStats.losesPercentage)}',
+            ),
+            Text(
+              '🤷‍♂️ ${context.l10n.statDraws(currentStats.nDraws, currentStats.drawsPercentage)}',
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

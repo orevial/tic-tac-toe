@@ -7,6 +7,7 @@ import 'package:tictactoe/domain/grid_size.dart';
 import 'package:tictactoe/domain/player.dart';
 import 'package:tictactoe/services/negamax_bot.dart';
 import 'package:tictactoe/services/random_bot.dart';
+import 'package:tictactoe/ui/stats_provider.dart';
 
 const _aiTurnMinDelay = 750;
 
@@ -100,7 +101,10 @@ class GameNotifier extends AsyncNotifier<GameState> {
     state = AsyncValue.data(actualState);
 
     // Check for game over after human move
-    if (actualState.gameResult != null) return;
+    if (actualState.gameResult != null) {
+      await _actOnGameFinished(actualState.board.gameResult!);
+      return;
+    }
 
     // 2. AI Move
     final aiBot = switch (settings.botDifficulty) {
@@ -122,16 +126,34 @@ class GameNotifier extends AsyncNotifier<GameState> {
 
     final aiBoard = actualState.board.copyWithMark(aiMove, Player.ai);
 
-    state = AsyncValue.data(
-      actualState.copyWith(
-        board: aiBoard,
-        currentPlayer: Player.human,
-        gameResult: aiBoard.gameResult,
-      ),
+    actualState = actualState.copyWith(
+      board: aiBoard,
+      currentPlayer: Player.human,
+      gameResult: aiBoard.gameResult,
     );
+    state = AsyncValue.data(actualState);
+
+    // Check for game over after AI move
+    if (actualState.gameResult != null) {
+      await _actOnGameFinished(actualState.board.gameResult!);
+      return;
+    }
   }
 
   Future<void> reset() async {
     state = AsyncValue.data(await build());
+  }
+
+  Future<void> _actOnGameFinished(GameResult result) async {
+    final currentStats = await statsDatasource.fetchStats();
+    final botDifficulty = state.requireValue.botDifficulty;
+    final gridSize = state.requireValue.board.gridSize;
+
+    final newStats = switch (result) {
+      GameResult.win => currentStats.copyWithNewWin(botDifficulty, gridSize),
+      GameResult.lose => currentStats.copyWithNewLose(botDifficulty, gridSize),
+      GameResult.draw => currentStats.copyWithNewDraw(botDifficulty, gridSize),
+    };
+    await statsDatasource.saveStats(newStats);
   }
 }

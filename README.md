@@ -52,12 +52,16 @@ Game screen:
 
 - **Code Generation**: Reduce boilerplate by introducing:
   - `freezed` for immutable data classes (`Board`, `GameResult`). Useful to avoid boilerplate equals / hashscode / copyWith.
-  - `get_it` + `injectable` for Dependency Injection (to decouple `SettingsDatasource` and others).
+  - `json_serializable` (through `freezed`) for serialization/deserialization
+  - `get_it` + `injectable` for Dependency Injection (to decouple `StatsDatasource`, `SettingsDatasource` and others).
   - `flutter_gen_runner` to replace String-based APIs for assets by static access APIs 
 - **Refactoring**:
   - Optimize the `winner` detection method in `Board` (e.g. merge row/column checks).
   - Improve `GameProvider` tests to be time-independent.
   - Move AI computation to isolate
-  - Add an iterative deepening based on time so the algorithm stops looking for the best move after a given time (e.g. 1 second). That would guarantee that the AI always returns a move quickly, even on slower devices. 
+  - Add an iterative deepening based on time so the algorithm stops looking for the best move after a given time (e.g. 1 second). That would guarantee that the AI always returns a move quickly, even on slower devices.
+  - Make sure Riverpod usage is correct. Not sure about providers inter-dependency, I'll have to check
 - **Static Analysis**: Integrate stricter linting rules (e.g., `very_good_analysis` or DCM).
-- **Tests & CI/CD**: We could add golden tests & integration tests to ensure that our app works end-to-end and is pixel-perfect. 
+- **Tests & CI/CD**: 
+  - We could add golden tests & integration tests to ensure that our app works end-to-end and is pixel-perfect. 
+  - Also add unit tests for providers that are not currently tested (theme & stats providers). 

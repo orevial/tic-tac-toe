@@ -7,6 +7,40 @@
   "startGameDifficultyLabel": "Difficulty:",
   "startGameDifficultyEasyLabel": "Easy",
   "startGameDifficultyHardLabel": "Hard",
+  "statsLabel": "Stats",
+  "statWins": "Wins : {n} ({percentage}%)",
+  "@statWins": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "statLoses": "Loses : {n} ({percentage}%)",
+  "@statLoses": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
+  "statDraws": "Draws : {n} ({percentage}%)",
+  "@statDraws": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "percentage": {
+        "type": "int"
+      }
+    }
+  },
   "boardHumanPlayerTurn": "Your turn !",
   "boardAiPlayerTurn": "It's the AI's turn...",
   "boardPlayAgainButtonLabel": "Play again",
