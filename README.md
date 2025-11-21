@@ -1,6 +1,6 @@
 # Tic-Tac-Toe
 
-A modern Tic-Tac-Toe application built with Flutter, featuring an AI opponent with various difficulty levels.
+A modern Tic-Tac-Toe application built with Flutter, featuring an AI opponent with various grid sizes and difficulty levels.
 
 ## Getting Started
 
