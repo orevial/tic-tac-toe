@@ -4,6 +4,8 @@ extension ThemeUtils on BuildContext {
   ThemeData get theme => Theme.of(this);
 
   TextTheme get textTheme => theme.textTheme;
+
+  Size get mediaQuerySize => MediaQuery.sizeOf(this);
 }
 
 const kPrimaryColor = Color(0xFF00BF6D);

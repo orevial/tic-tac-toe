@@ -16,8 +16,9 @@ dependencies:
   dio: ^5.9.0
   flutter_riverpod: ^3.0.3
   gap: ^3.0.1
-  shared_preferences: ^2.5.3
   intl: any
+  lottie: ^3.3.2
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:
@@ -29,3 +30,5 @@ dev_dependencies:
 flutter:
   generate: true
   uses-material-design: true
+  assets:
+    - assets/animations/

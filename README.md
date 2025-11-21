@@ -53,6 +53,7 @@ Game screen:
 - **Code Generation**: Reduce boilerplate by introducing:
   - `freezed` for immutable data classes (`Board`, `GameResult`). Useful to avoid boilerplate equals / hashscode / copyWith.
   - `get_it` + `injectable` for Dependency Injection (to decouple `SettingsDatasource` and others).
+  - `flutter_gen_runner` to replace String-based APIs for assets by static access APIs 
 - **Refactoring**:
   - Optimize the `winner` detection method in `Board` (e.g. merge row/column checks).
   - Improve `GameProvider` tests to be time-independent.

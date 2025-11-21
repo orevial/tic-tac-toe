@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:lottie/lottie.dart';
 import 'package:tictactoe/domain/bot_difficulty.dart';
 import 'package:tictactoe/domain/cell.dart';
+import 'package:tictactoe/domain/game_result.dart';
 import 'package:tictactoe/domain/grid_size.dart';
 import 'package:tictactoe/domain/player.dart';
 import 'package:tictactoe/ui/game_provider.dart';
@@ -53,8 +55,10 @@ class _GameBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final animationSize = context.mediaQuerySize.width / 2.5;
     final board = gameState.board;
     final currentPlayer = gameState.currentPlayer;
+    final gameResult = gameState.gameResult;
 
     final turnMessage = currentPlayer == Player.human
         ? context.l10n.boardHumanPlayerTurn
@@ -80,85 +84,100 @@ class _GameBoard extends StatelessWidget {
       }
     }
 
-    return Column(
+    return Stack(
       children: [
-        if (gameState.gameResult == null)
-          Row(
-            mainAxisAlignment: .center,
-            children: [
-              Text(turnMessage),
-              if (currentPlayer == Player.ai) ...[
-                Space.s,
-                SizedBox.square(
-                  dimension: ThemeSize.sm,
-                  child: CircularProgressIndicator(strokeWidth: 2.0),
-                ),
-              ],
+        Column(
+          children: [
+            if (gameState.gameResult == null) ...[
+              Space.ml,
+              Row(
+                mainAxisAlignment: .center,
+                children: [
+                  Text(turnMessage),
+                  if (currentPlayer == Player.ai) ...[
+                    Space.s,
+                    SizedBox.square(
+                      dimension: ThemeSize.sm,
+                      child: CircularProgressIndicator(strokeWidth: 2.0),
+                    ),
+                  ],
+                ],
+              ),
+              Space.m,
+            ] else ...[
+              Text(resultTitle!, style: context.textTheme.headlineMedium),
+              Space.xs,
+              Text(resultMessage!),
+              Space.m,
             ],
-          )
-        else
-          Space.custom(ThemeSize.m),
-        Space.s,
-        SizedBox(
-          height: MediaQuery.sizeOf(context).width - ThemeSize.xs * 2,
-          child: GridView.count(
-            physics: NeverScrollableScrollPhysics(),
-            crossAxisCount: board.gridSize.size,
-            crossAxisSpacing: ThemeSize.xs,
-            mainAxisSpacing: ThemeSize.xs,
-            children: board.cells
-                .map(
-                  (cell) => GridCell(
-                    cell: cell,
-                    cellColor:
-                        (gameState.board.winner?.winningMove.contains(
-                              cell.position,
-                            ) ??
-                            false)
-                        ? cellColor
-                        : null,
-                    onTap: () {
-                      if (currentPlayer == Player.human &&
-                          cell.mark == Player.none) {
-                        ref
-                            .read(
-                              gameProvider(
-                                GameSettings(
-                                  gridSize: board.gridSize,
-                                  botDifficulty: gameState.botDifficulty,
-                                ),
-                              ).notifier,
-                            )
-                            .play(cell.position);
-                      }
-                    },
-                  ),
-                )
-                .toList(),
-          ),
-        ),
-        Space.l,
-        if (gameState.gameResult != null) ...[
-          Text(resultTitle!, style: context.textTheme.headlineMedium),
-          Space.xs,
-          Text(resultMessage!),
-          Space.m,
-          FilledButton(
-            onPressed: () {
-              ref
-                  .read(
-                    gameProvider(
-                      GameSettings(
-                        gridSize: board.gridSize,
-                        botDifficulty: gameState.botDifficulty,
+            Space.s,
+            SizedBox(
+              height: context.mediaQuerySize.width - ThemeSize.xs * 2,
+              child: GridView.count(
+                physics: NeverScrollableScrollPhysics(),
+                crossAxisCount: board.gridSize.size,
+                crossAxisSpacing: ThemeSize.xs,
+                mainAxisSpacing: ThemeSize.xs,
+                children: board.cells
+                    .map(
+                      (cell) => GridCell(
+                        cell: cell,
+                        cellColor:
+                            (gameState.board.winner?.winningMove.contains(
+                                  cell.position,
+                                ) ??
+                                false)
+                            ? cellColor
+                            : null,
+                        onTap: () {
+                          if (currentPlayer == Player.human &&
+                              cell.mark == Player.none) {
+                            ref
+                                .read(
+                                  gameProvider(
+                                    GameSettings(
+                                      gridSize: board.gridSize,
+                                      botDifficulty: gameState.botDifficulty,
+                                    ),
+                                  ).notifier,
+                                )
+                                .play(cell.position);
+                          }
+                        },
                       ),
-                    ).notifier,
-                  )
-                  .reset();
-            },
-            child: Text(context.l10n.boardPlayAgainButtonLabel),
+                    )
+                    .toList(),
+              ),
+            ),
+            Space.l,
+            if (gameState.gameResult != null) ...[
+              FilledButton(
+                onPressed: () {
+                  ref
+                      .read(
+                        gameProvider(
+                          GameSettings(
+                            gridSize: board.gridSize,
+                            botDifficulty: gameState.botDifficulty,
+                          ),
+                        ).notifier,
+                      )
+                      .reset();
+                },
+                child: Text(context.l10n.boardPlayAgainButtonLabel),
+              ),
+            ],
+          ],
+        ),
+        if (gameResult != null)
+          Align(
+            alignment: .bottomCenter,
+            child: Lottie.asset(
+              gameResult.animation,
+              width: animationSize,
+              height: animationSize,
+            ),
           ),
-        ],
       ],
     );
   }
@@ -214,4 +233,16 @@ extension on Player {
     Player.human => 'X',
     Player.ai => 'O',
   };
+}
+
+extension on GameResult {
+  String get animation {
+    final file = switch (this) {
+      GameResult.win => 'trophy',
+      GameResult.lose => 'sad',
+      GameResult.draw => 'oops_try_again',
+    };
+
+    return 'assets/animations/$file.json';
+  }
 }
